@@ -537,6 +537,8 @@ class SqlAlchemySessionInterface(SessionInterface):
         return self.session_class(sid=sid, permanent=self.permanent)
 
     def save_session(self, app, session, response):
+        if not self.should_set_cookie(app, session):
+            return
         domain = self.get_cookie_domain(app)
         path = self.get_cookie_path(app)
         store_id = self.key_prefix + session.sid
